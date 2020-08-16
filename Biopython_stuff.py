@@ -242,6 +242,7 @@ class BioP(commands.Cog):
         
         #https://www.ncbi.nlm.nih.gov/nuccore/NW_003302554.1?report=fasta&from=10395640&to=10397480
         pass
+####### Something about the following event is causing the message duplication error #######
     """
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -276,6 +277,8 @@ class BioP(commands.Cog):
             
         await self.client.process_commands(message)
     """          
+####### End event #######
+
     @commands.command(aliases = ["Tree"], help = "Constructs a Phylogenetic Tree based on a given Fasta File")
     async def PTree(self, ctx):
         try:
