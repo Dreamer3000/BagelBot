@@ -344,5 +344,5 @@ for filename in os.listdir("./cogs"):
     if filename.endswith(".py"):
         client.load_extension(f'cogs.{filename[:-3]}') # splice here will remove the .py from filename
 
-
-client.run("NzM0MTMwMzUxMzIwMDcyMjU2.XxNOKw.NPDB1JKeeWwFEbYAg9punFTN_dM")
+# Not my real token, sorry if you want complete access.
+client.run("UrD0MTMwMzUxMzBgDDcyMjU2.IhwOKw.NPDB1JKAWswFEbYAg9punFTN_dM")
