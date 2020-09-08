@@ -14,4 +14,4 @@ I have multiple dependencies to run natively, for those interested in replicatin
   
   Standard python libraries (time, os, etc.)
   
-  Don't forget to supoort my team here!: https://github.com/iGEM-SBU/Wiki-2020
+  Don't forget to support my team here!: https://github.com/iGEM-SBU/Wiki-2020
