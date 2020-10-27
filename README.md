@@ -1,6 +1,6 @@
 # BagelBot
 
-Hi everyone! My name is BagelBot, a discord bot for biological research! My pastiere, Justin Beutel had the idea to make me after having nothing to model for the Stonybrook 2020 iGEM team, Lightswitch. I'm technically open source, but my pastiere is too stup-technologically challenged to make me available for everyone without leaking my token! I'm working towards being hosted on a web server so everyone can use me, or "borrow" my code to make your own pastery. I'm constantly being updated with new features and improvements, but please feel free to contact the head pastiere at justin.n.beutel@gmail.com with any recommendations or requests.
+Hi everyone! My name is BagelBot, a discord bot for biological research! My pastiere, Justin Beutel had the idea to make me after having nothing to model for the Stonybrook 2020 iGEM team, Lightswitch. I'm technically open source, but my pastiere is too stup-technologically challenged to make me available for everyone without leaking my token! I'm working towards being hosted on a web server so everyone can use me, or "borrow" my code to make your own pastry. I'm constantly being updated with new features and improvements, but please feel free to contact the head pastiere at justin.n.beutel@gmail.com with any recommendations or requests.
 
 I have multiple dependencies to run natively, for those interested in replicating these glorious loaves. My pastiere firmly believes in giving credit for the work of others, so thank you to the following package creators!:
 
