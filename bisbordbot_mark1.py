@@ -32,6 +32,11 @@ bJokes = ["What kind of bagel can fly?", "Why doesn’t a seagull fly over the b
 bAnswers = ["A plain bagel", "Because then it’d be a bagel.", "Best Bagel Bites of my life", "You put a lox on it",
             "Call a loxsmith", "Apparently they were bread in captivity", "To get toasted"]
 
+allowed = ["Download_Seqs", "Odds", "download_General", "run", "Download_Swiss", "Download_Cif/PDB"]
+
+master = str(os.getcwd())
+
+
 ### End jokes
 
 ### Commands ###
@@ -59,9 +64,16 @@ async def on_error(ctx, error, *args, **kwargs):
 async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
         pass
-    if "Download" in str(error) or "Odds" in str(error) or "download_General" in str(error):
-        pass
-    else:
+
+    print(str(error))
+    err = False
+    
+    for i in range(len(allowed)):
+        if allowed[i] in str(error):
+            err = True
+            
+        
+    if err != True:
         await ctx.send(str(error) + "!")
         await ctx.send("You should use $help' if you don't know the command")
 
@@ -74,7 +86,15 @@ a tool for future teams to get started with and learn simple DNA manipulation an
 If you'd like a full list of my commands, try '$help' (without the '' of course). Looking forward to meeting you!""")
 
 
-
+@client.command(aliases = ["Repos", "Repositories"], help = ("Posts links to the 2 repos for the team and BB"))
+async def Repo(ctx):
+    embed = discord.Embed(title = "Repositories", description = "Here's the repos for myself and the team!:")
+    embed.add_field(name = "Team Repository", value = "https://github.com/iGEM-SBU/Wiki-2020", inline = True)
+    embed.set_thumbnail
+    embed.add_field(name = "My Repositroy", value = "https://github.com/Dreamer3000/BagelBot", inline = True)
+    await ctx.send(embed = embed)    
+        
+        
 @client.command(aliases = ["bageljoke"], help = "Random assortment of family-friendly bagel jokes")
 async def bjokes(ctx):
             
@@ -123,6 +143,7 @@ async def quit(ctx):
 
 @client.command(aliases = ["tateru"], help = "Will a Luma appear?")
 async def Tateru(ctx):
+    os.chdir(master)
     x = random.randint(1,8000)
     
     ans = 4288
@@ -198,11 +219,11 @@ async def on_message(message):
 @client.listen()          
 async def on_message(message):
     
-    if message.content.startswith("$Download"):
-        
+    if message.content.endswith("$Download_Seqs"):
+        os.chdir(master)
         channel = message.channel
+        author = message.author
         
-            
         def check(m):
             return m.channel == channel
             
@@ -211,19 +232,29 @@ async def on_message(message):
         mesg = await client.wait_for("message", check=check, timeout=60)
         
         await channel.send("Processed Attachment")
-            
+        
+        if os.path.exists(str(author)):
+            os.chdir(str(author))
+
+        else:
+            os.mkdir(str(author))
+            os.chdir(str(author))
+        
         await mesg.attachments[0].save("Seqs.phy")
-            
+        
         await channel.send("Saved attachment")
-                #print(y)
+       
+        os.chdir(master)
+       
+        
         
 @client.listen()          
 async def on_message(message):
     
     if message.content.startswith("$download_general"):
-        
+        os.chdir(master)
         channel = message.channel
-        
+        author = message.author
             
         def check(m):
             return m.channel == channel
@@ -238,15 +269,51 @@ async def on_message(message):
         mesg = await client.wait_for("message", check=check, timeout=60)
         
         await channel.send("Processed Attachment")
+        
+        if os.path.exists(str(author)):
+            os.chdir(str(author))
+
+        else:
+            os.mkdir(str(author))
+            os.chdir(str(author))
+        
             
         await mesg.attachments[0].save("Pic" + t.content)
             
         await channel.send("Saved attachment")  
-    
+        os.chdir(master)
+@client.listen()
+async def on_message(message):
 
+    if message.content.startswith("$Download_Cif/PDB"):
+        os.chdir(master)
+        channel = message.channel
+        author = message.author
+        def check(m):
+            return m.channel == channel
+            
+        await channel.send("Put in an attachment")
+           
+        mesg = await client.wait_for("message", check=check, timeout=60)
+       
+        await channel.send("Processed Attachment")
+        
+        if os.path.exists(str(author)):
+            os.chdir(str(author))
+
+        else:
+            os.mkdir(str(author))
+            os.chdir(str(author))
+        
+        await mesg.attachments[0].save(mesg.attachments[0].filename)
+            
+        await channel.send("Saved attachment")
+       
+        os.chdir(master)
+       
 ####### Math Functions go here: #######
 
-@client.command(help = "Find the mole ratio of two compounds. Takes in 4 arguments: grams of molecule 1, molar mass of molecule 1, grams of molecule 2 andmolar mass of molecule 2")
+@client.command(help = "Find the mole ratio of two compounds. Takes in 4 arguments: grams of molecule 1, molar mass of molecule 1, grams of molecule 2 and molar mass of molecule 2")
 async def mole_ratio(ctx, arg1, arg2, arg3, arg4):
     mole1 = float(arg1)/float(arg2)
     mole2 = float(arg3)/float(arg4)
@@ -255,71 +322,55 @@ async def mole_ratio(ctx, arg1, arg2, arg3, arg4):
     fraction2 = mole2/total
     await ctx.send("The first molar fraction is " + str(fraction1) + " and the second molar fraction is " + str(fraction2) )
 
-@client.command(help = "Will one day tell you the VESPR Geometry and Steric Number of a molecule, nothing here as of yet")
+@client.command(aliases = ["SN"], help = "Will one day tell you the VESPR Geometry and Steric Number of a molecule, first input is the number of bonds, second is the number of lone pairs")
 async def StericNumber(ctx, arg1, arg2):
-    # arg1 is number of atoms, arg2 is number of electrons in molecule
-    #if
-    await ctx.send("Nothing here yet, sorry")
-    pass
-
-@client.command(help = "Will tell you the average of however many arguments you pass it, for example: $mean 1 87 52")
-async def mean(ctx, *args):
-    length = len(args)
-    counter = 0
-    for i in args:
-        counter += int(i)
-    await ctx.send("The mean of your numbers is " + str(counter /len(args)))
-
-@client.command(aliases = ["Pythag", "pythagoras", "pythag", "pg"], help = "Takes in 3 arguments, 2 numbers and what side you're looking for (a,b or c). For example: $Pythag 10 14 a")
-async def Pythagoras(ctx, arg1, arg2, arg3):
-    
-    if arg3.lower() == "c":
-        answer = (int(arg1) ** 2 + int(arg2) ** 2) ** (1/2)
-        await ctx.send("Your answer is " + str(answer))
-        
-    else:
-        if int(arg1) > int(arg2):
-            answer = (int(arg1) ** 2 - int(arg2) ** 2) ** (1/2)
-            await ctx.send("Your answer is " + str(answer))
-            
-        elif int(arg2) > int(arg1):
-            answer = (int(arg2) ** 2 - int(arg1) ** 2) ** (1/2)
-            await ctx.send("Your answer is " + str(answer))
-
-@client.command(aliases = ["plot", "pl", "bagelplot"], help = "Plot's a linear graph of 2 data sets. Data set 1 is the first half of arguments, data set 2 is the second half of arguments. For example: $plot 1 2 3 4 2 4 6 8")
-async def Plot(ctx, *args):
-    
-    test = []
-    xlist = []
-    ylist = []
-    
-    for i in args:
-        test.append(i)
-    
-    plt.clf()
-    
-    for i in range(0,int(len(test)/2)):
-        xlist.append(test[int(i)])
-        
-    for i in range(int(len(test)/2), int(len(test))):
-        ylist.append(test[int(i)])
-    
-    x = np.asarray(xlist)
-    y = np.asarray(ylist)
-
-    plt.plot(x,y, 'b--')
-    plt.grid(True)
-    plt.title(f'{ctx.message.author}\'s Graph')
-    plt.savefig(fname='plot')
-    #print(os.path.dirname(os.path.realpath('plot.png')))
-    with open("plot.png","rb") as tacos:
-        t = discord.File(tacos, filename = "plot.png")
-    await ctx.send(file = t)
-    os.remove('plot.png')
-    
-    test.clear()
-    xlist.clear()
-    ylist.clear()
+    # arg1 is number of bonds, arg2 is number of lone pairs
+    SN = int(arg1) + int(arg2)
+    SN2 = "Linear"
+    SN3 = ["Trigonal Planar", "Bent"]
+    SN4 = ["Tetrahedral", "Trigonal Pyramidal", "Bent"]
+    SN5 = ["Trigonal Bipyramidal", "See Saw", "T-shaped", "Linear"]
+    SN6 = ["Octahedral", "Square Pyrimidal", "Square Planar"]
+    x = "Check your input, the geometry doesn't seem right"
+    arg2 = int(arg2)
+    if SN == 2:
+        await ctx.send("Your Molecule is Lienar")
+    elif SN == 3:
+        if arg2 == 1:
+            await ctx.send("Your Molecule is: " + SN3[1])
+        if arg2 == 0:
+            await ctx.send("Your Molecule is: " + SN3[0])
+        else:
+            await ctx.send(x)
+    elif SN == 4:
+        if arg2 == 2:
+            await ctx.send("Your Molecule is: " + SN4[2])
+        if arg2 == 1:
+            await ctx.send("Your Molecule is: " + SN4[1])
+        if arg2 == 0:
+            await ctx.send("Your Molecule is: " + N4[0])
+        else:
+            await ctx.send(x)
+    elif SN == 5:
+        if arg2 == 3:
+            await ctx.send("Your Molecule is: " + SN5[3])
+        if arg2 == 2:
+            await ctx.send("Your Molecule is: " + SN5[2])
+        if arg2 == 1:
+            await ctx.send("Your Molecule is: " + SN5[1])
+        if arg2 == 0:
+            await ctx.send("Your Molecule is: " + SN5[0])
+        else:
+            await ctx.send(x)
+    elif SN == 6:
+        if arg2 == 2:
+            await ctx.send("Your Molecule is: " + SN6[2])
+        if arg2 == 1:
+            await ctx.send("Your Molecule is: " + SN6[1])
+        if arg2 == 0:
+            await ctx.send("Your Molecule is: " + SN6[0])
+        else:
+            await ctx.send(x)
 
 
 @client.command(aliases = ["IHD"], help = "Calculates the index of Hydrogen Defeciency. Write the number of Carbons, Nitrogens, Hydrogens and Halogens in that order. Syntax: $IHD 6 4 0 0")
@@ -339,10 +390,21 @@ async def ihd(ctx, *args):
     await ctx.send("Your molecule will have a minimum of " + str(answer) + " rings and double bonds combined, but MAY have more in some cases. Normally, the minimum will be correct.")
     await ctx.send("Warning: If your molecule has triple bonds, it can have up to " + str(int(answer/2)) +  " triple bonds (2 IHD per triple bond)")
     
+@client.command()
+async def test1(ctx):
+    await ctx.send(str(ctx.author))
+
+@client.command(aliases = ["genshin"])
+async def Genshin(ctx, arg1):
+   
+    answer = .984 ** int(arg1)
+    
+    await ctx.send("The chance of you finding a 5 star within " + str(arg1) + " pulls is: " + str((1 - answer) * 100) + "%" )
     
 for filename in os.listdir("./cogs"):
     if filename.endswith(".py"):
         client.load_extension(f'cogs.{filename[:-3]}') # splice here will remove the .py from filename
 
-# Not my real token, sorry if you want complete access.
-client.run("UrD0MTMwMzUxMzBgDDcyMjU2.IhwOKw.NPDB1JKAWswFEbYAg9punFTN_dM")
+
+# Not my real token, sorry if you want to steal my bot.
+client.run("UrD098c.MwMzU/xMzBgDDcyMjU2.IhwOKw.NPDB1JKAWswFEbYAg9punFTN_dM")
